@@ -13,4 +13,4 @@ services:
     - opensearch-data:/usr/share/opensearch/data
 
 volumes:
-opensearch-data:
+  opensearch-data:
