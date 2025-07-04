@@ -3,17 +3,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from .routers import logs
 
 app = FastAPI(
-    title="API de gestion des logs",
-    description="API pour ingérer, stocker et rechercher des logs avec OpenSearch",
-    version="1.0.0"
-)
+    title="API pour logs",
+    description="API de gestion de logs pour le ministere des Armees !",
+    version="0.1.0")
 
-# CORS pour le frontend
+# CORS pour le frontend (permet d'autoriser ou interdire a un navigateur d'acceder depuis un domaine)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Port par défaut de Vite
+    allow_origins=["http://localhost:5173"],  # port par défaut de Vite
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET, POST"], # Méthodes autorisées (GET, POST, etc.), mettre "*" autorise tout
     allow_headers=["*"],
 )
 

@@ -29,6 +29,7 @@ class OpenSearchService:
         """Indexe un log dans OpenSearch et retourne l'ID généré"""
         timestamp = log_data["timestamp"] # a ce stade timestamp = "2025-07-01T14:30:00"
         index_name = self._get_index_name(timestamp) # index_name = "logs-2025.07.01"
+        self._index_mapping(index_name)
         response = self.client.index(
             index=index_name, # "logs-2025.07.01"
             body=log_data, # les données de log
@@ -51,7 +52,7 @@ class OpenSearchService:
             }
         }
     }
-    # ajouter les conditions optionnelles selon les paramètres
+        # ajouter les conditions optionnelles selon les paramètres
         if q: 
             query["query"]["bool"]["must"].append({"match": {"message": q}}) # match cherche une string dans 
         if level:
@@ -65,3 +66,18 @@ class OpenSearchService:
             tmp["id"] = hit["_id"] # j'qjoute l'id dans le resultat final
             search_ids.append(tmp)
         return search_ids # je return les logs dans l'ordre decroissant de la requete initiale
+    
+    def _index_mapping(self, index_name: str): # obligatoire pour que OpenSearch interprete comme il faut les valeurs
+        """Crée l'index avec le bon mapping s'il n'existe pas"""
+        if not self.client.indices.exists(index=index_name):
+            mapping = {
+                "mappings": {
+                    "properties": {
+                        "timestamp": {"type": "date", "format": "strict_date_optional_time||epoch_millis"}, # epoch_millis lrs timestamps en millisecondes pour le format iso8601
+                        "level": {"type": "keyword"},
+                        "message": {"type": "text"},
+                        "service": {"type": "keyword"}
+                    }
+                }
+            } # primordial car sinon, ex: le level est considere comme un text et non un keyword !
+            self.client.indices.create(index=index_name, body=mapping)
