@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { SearchFilters } from '../types/log.types';
 
 //typage des props
@@ -13,57 +13,67 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({ onSearch, loading })
   const [level, setLevel] = useState<string>('');
   const [service, setService] = useState<string>('');
 
-  // déclencher la recherche
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault(); // empeche le comportement par defaut du formulaire qui est de recharger la page, primordial pour le projet !!
-    onSearch({ // appelle une fonction lors de la soumission d'une recherche
-      q: query || undefined, // ternaire, si query n'est pas vide utiliser query, sinon, utiliser undefined car l'API attends ?q=recherche ou rien
+
+  // recherche textuelle (avec délai pour eviter les appels api incessants)
+  useEffect(() => {
+    if (!query) return; // ne pas chercher si vide
+    
+    const timeoutId = setTimeout(() => {
+      onSearch({
+        q: query || undefined,
+        level: level || undefined,
+        service: service || undefined
+      });
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [query]);
+
+  // Pour les filtres (immédiat)
+  useEffect(() => {
+    onSearch({
+      q: query || undefined,
       level: level || undefined,
       service: service || undefined
     });
-  };
+  }, [level, service]);
+
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-3">
-      <div className="flex">
+    <div className="flex flex-col md:flex-row gap-3">
+      <div className='mx-auto'>
         <input 
           type="text" 
           placeholder="Search logs"
           value={query} // affiche la valeur de l'etat React, qui d'ailleurs controle la valeur mais pas le DOM
           onChange={(e) => setQuery(e.target.value)} // evenement de changement, on ajoute la valeur
-          className="w-full md:w-80 px-3 h-10 rounded-l border-2 border-sky-500 focus:outline-none focus:border-sky-500"
+          className="w-full md:w-80 px-3 h-10 rounded border-2 border-sky-500 focus:outline-none focus:border-sky-500"
         />
-        <button 
-        type="submit" 
-        disabled={loading} // pour empecher de multiples soumissions
-        className="bg-sky-500 text-white rounded-r px-2 md:px-3 py-0 md:py-1 disabled:opacity-50 disabled:cursor-not-allowed"> 
-          {loading ? 'Recherche...' : 'Search'} 
-        </button>
+        
+        <select 
+          value={level}
+          onChange={(e) => setLevel(e.target.value)}
+          className="h-10 border-2 border-sky-500 focus:outline-none focus:border-sky-500 text-sky-500 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider"
+        >
+          <option value="">Tous les level</option>
+          <option value="INFO">INFO</option>
+          <option value="WARNING">WARNING</option>
+          <option value="ERROR">ERROR</option>
+          <option value="DEBUG">DEBUG</option>
+        </select>
+        
+        <select 
+          value={service}
+          onChange={(e) => setService(e.target.value)}
+          className="h-10 border-2 border-sky-500 focus:outline-none focus:border-sky-500 text-sky-500 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider"
+        >
+          <option value="">Tous les services</option>
+          <option value="api-gateway">api-gateway</option>
+          <option value="user-service">user-service</option>
+          <option value="payment-service">payment-service</option>
+          <option value="background-worker">background-worker</option>
+        </select>
       </div>
-      {/* {loading ? 'Recherche...' : 'Search'} = expression conditionelle */}
-      <select 
-        value={level}
-        onChange={(e) => setLevel(e.target.value)}
-        className="w-full h-10 border-2 border-sky-500 focus:outline-none focus:border-sky-500 text-sky-500 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider"
-      >
-        <option value="">Tous les niveaux</option>
-        <option value="INFO">INFO</option>
-        <option value="WARNING">WARNING</option>
-        <option value="ERROR">ERROR</option>
-        <option value="DEBUG">DEBUG</option>
-      </select>
-      
-      <select 
-        value={service}
-        onChange={(e) => setService(e.target.value)}
-        className="h-10 border-2 border-sky-500 focus:outline-none focus:border-sky-500 text-sky-500 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider"
-      >
-        <option value="">Tous les services</option>
-        <option value="api-gateway">api-gateway</option>
-        <option value="user-service">user-service</option>
-        <option value="payment-service">payment-service</option>
-        <option value="background-worker">background-worker</option>
-      </select>
-    </form>
+    </div>
   );
 };
 

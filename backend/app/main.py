@@ -12,7 +12,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],  # port par défaut de Vite
     allow_credentials=True,
-    allow_methods=["GET, POST"], # Méthodes autorisées (GET, POST, etc.), mettre "*" autorise tout
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 

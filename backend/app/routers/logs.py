@@ -23,10 +23,10 @@ def create_log(item: LogEntry, openSearch: OpenSearchService = Depends(get_opens
         raise HTTPException(status_code=500, detail=f"OpenSearch error: {str(e)}") # code 500 pour erreur serveur
         
 @router.get("/search")
-def search_logs(q: str = None, level: LogLevel = None, service: str = None, openSearch: OpenSearchService = Depends(get_opensearch_service)) -> list:
+def search_logs(q: str = None, level: LogLevel = None, service: str = None, limit: int = None, openSearch: OpenSearchService = Depends(get_opensearch_service)) -> list:
     try:
         level_str = level.value if level else None #permet de verifier que c'est bien dans l'Enum que j'ai fais
-        searched = openSearch.search_logs(q, level_str, service)
+        searched = openSearch.search_logs(q, level_str, service, limit)
         return searched
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"OpenSearch error: {str(e)}") #f-string permet de mettre des expressions

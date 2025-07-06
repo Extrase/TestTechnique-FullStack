@@ -12,7 +12,7 @@ export const useLogs = () => { // usestate return un tableau avec 2 items, le cu
     try { // try essaye les operations
         setLoading(true); // initialisation du chargement
         setError(null); //error set a null pour etre sur de bien gerer les erreurs ensuite
-        const actualLogs = await apiSearchLogs({}); // appels API sans les filtres pour tout afficher
+        const actualLogs = await apiSearchLogs({ limit: 20 }); // appels API sans les filtres pour tout afficher
         setLogs(actualLogs);
     } catch (error){ // catch une erreur si il y en a
         setError("Erreur lors du chargement des logs");
@@ -32,7 +32,8 @@ export const useLogs = () => { // usestate return un tableau avec 2 items, le cu
         const searchedLogs = await apiSearchLogs({
             level: filters.level,
             q: filters.q,
-            service: filters.service
+            service: filters.service,
+            limit: 100
         });
         setLogs(searchedLogs);
     } catch (error){ // catch une erreur si il y en a

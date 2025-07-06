@@ -44,7 +44,7 @@ export const LogForm: React.FC<LogFormProps> = ({ onLogCreated, loading }) => {
     e.preventDefault(); // empeche le comportement par defaut du formulaire qui est de recharger la page, primordial pour le projet !!
     setSuccessMessage('');
     setErrorMessage('');
-    if (!validateTimestamp(timestamp)) {
+    if (validateTimestamp(timestamp)) {
         setErrorMessage('Format timestamp invalide (ex: 2025-07-06T14:30:00)');
         return;
     }
@@ -114,7 +114,7 @@ export const LogForm: React.FC<LogFormProps> = ({ onLogCreated, loading }) => {
             <label htmlFor="message" className="block text-gray-700 font-medium mb-2">Message</label>
             <textarea id="message" name="message" value={message}
             onChange={(e) => setMessage(e.target.value)}
-                className="border border-gray-400 p-2 w-full rounded-lg focus:outline-none focus:border-blue-400" rows={5}></textarea>
+                className="border border-gray-400 p-2 w-full rounded-lg focus:outline-none focus:border-blue-400" required rows={5}></textarea>
         </div>
         <div>
             <button type="submit" 

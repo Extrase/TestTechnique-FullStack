@@ -40,10 +40,10 @@ class OpenSearchService:
         final_log["id"] = generated_id
         return final_log
         
-    def search_logs(self, q: str = None, level: str = None, service: str = None) -> list:
+    def search_logs(self, q: str = None, level: str = None, service: str = None, limit: int = 100) -> list:
         """Recherche les logs avec filtres optionnels"""
         query = {
-        "size": 100,
+        "size": limit,
         "sort": [{"timestamp": {"order": "desc"}}],
         "query": {
             "bool": {
