@@ -1,0 +1,57 @@
+import React from 'react';
+import { Log } from '../types/log.types';
+
+interface LogListProps {
+  logs: Log[]; // liste des logs
+  loading: boolean; // etat de chargement
+  error: string | null; // etat de l'erreur (existante ou non)
+}
+
+const readableTime = (timestamp: string) => { // transforme le temps de maniere habituellement lisble pour un etre humain 
+  const time = new Date(timestamp).toLocaleString("fr-FR",{ // j'ai choisi fr-FR car nous sommes en France !!
+    year: 'numeric', // permets de montrer la date plus specifiquement
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  }
+
+  );
+  return time;
+}
+
+const changeLevelColor = (level: string) => { // selon le niveau je change la couleur du text, dynamiquement !
+  if (level === 'INFO') return ("bg-blue-100 text-blue-700");
+  if (level === 'WARNING') return ("bg-rose-100 text-rose-700"); // j'aime bien cette couleur :)
+  if (level === 'ERROR') return ("bg-orange-100 text-orange-600");
+  if (level === 'DEBUG') return ("bg-zinc-100 text-zinc-700");
+
+  return ("bg-violet-100 text-violet-600") // si jamais il n'y a pas de level meme si c'est normalement impossible, c'est toujours + safe
+};
+
+export const LogList: React.FC<LogListProps> = ({logs, loading, error}) => {
+  // TODO: Gestion des cas d'affichage
+  if (loading) return <div>Chargement...</div>; // si loading = true
+  if (error) return <div>Erreur : {error}</div>; // si error n'est pas null
+  if (logs.length === 0) return <div>Aucun log</div>; // si il n'y a aucun log
+  
+  return (
+  <div className="space-y-4">
+    {logs.map(log => (
+      <div key={log.id} className="bg-white p-4 rounded-lg shadow border">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-sm text-gray-500">
+            {readableTime(log.timestamp)}
+          </span>
+          <span className={`px-2 py-1 rounded ${changeLevelColor(log.level)}`}>
+            {log.level}
+          </span>
+        </div>
+        <p className="text-gray-900 mb-2">{log.message}</p>
+        <p className="text-sm text-gray-600">Service: {log.service}</p>
+      </div>
+    ))}
+  </div>
+);
+}

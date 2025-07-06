@@ -51,8 +51,8 @@ export const useLogs = () => { // usestate return un tableau avec 2 items, le cu
             level: log.level,
             message: log.message,
             service: log.service
-        });
-        setLogs(addedLog[]);
+        }); // l'ordre dans setLogs est important car l'on veut ajouter de maniere decroissante!
+        setLogs([addedLog, ...logs]); // "..." permet de creer un nouvel array en recuperant tout de l'ancien et en ajoutant ce que l'on veut y ajouter
     } catch (error){ // catch une erreur si il y en a
         setError("Erreur lors du l'ajout du log");
     }
