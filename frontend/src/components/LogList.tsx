@@ -32,7 +32,6 @@ const changeLevelColor = (level: string) => { // selon le niveau je change la co
 };
 
 export const LogList: React.FC<LogListProps> = ({logs, loading, error}) => {
-  // TODO: Gestion des cas d'affichage
   if (loading) return <LoadingSpinner />; // si loading = true on appelle la "fonction" LoadingSpinner
   if (error) return <div>Erreur : {error}</div>; // si error n'est pas null
   if (logs.length === 0) return <div>Aucun log</div>; // si il n'y a aucun log
@@ -49,8 +48,8 @@ export const LogList: React.FC<LogListProps> = ({logs, loading, error}) => {
             {log.level}
           </span>
         </div>
-        <p className="text-gray-900 mb-2">{log.message}</p>
         <p className="text-sm text-gray-600">Service: {log.service}</p>
+        <p className="text-gray-900 mb-2">{log.message}</p>
       </div>
     ))}
   </div>

@@ -8,7 +8,7 @@ const instance = axios.create({
     }
 });
 
-// Fonction de recherche
+// fonction de recherche
 export const searchLogs = async (filters: SearchFilters): Promise<Log[]> => {
     const response = await instance.get("logs/search", {
         params: {
@@ -20,7 +20,7 @@ export const searchLogs = async (filters: SearchFilters): Promise<Log[]> => {
   return response.data
 };
 
-// Fonction de création
+// fonction de création
 export const createLog = async (log: Omit<Log, 'id'>): Promise<Log> => { // Omit permet de construire un model sans le keyword specifie
   const response = await instance.post("/logs", log) // timestamp, service etc mais sans id
   return response.data

@@ -7,7 +7,6 @@ export const useLogs = () => { // usestate return un tableau avec 2 items, le cu
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Fonctions à implémenter
   const loadLogs = async () => {
     try { // try essaye les operations
         setLoading(true); // initialisation du chargement
