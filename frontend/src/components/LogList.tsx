@@ -1,5 +1,6 @@
 import React from 'react';
 import { Log } from '../types/log.types';
+import { LoadingSpinner } from './LoadingSpinner';
 
 interface LogListProps {
   logs: Log[]; // liste des logs
@@ -32,12 +33,12 @@ const changeLevelColor = (level: string) => { // selon le niveau je change la co
 
 export const LogList: React.FC<LogListProps> = ({logs, loading, error}) => {
   // TODO: Gestion des cas d'affichage
-  if (loading) return <div>Chargement...</div>; // si loading = true
+  if (loading) return <LoadingSpinner />; // si loading = true on appelle la "fonction" LoadingSpinner
   if (error) return <div>Erreur : {error}</div>; // si error n'est pas null
   if (logs.length === 0) return <div>Aucun log</div>; // si il n'y a aucun log
   
   return (
-  <div className="space-y-4">
+  <div className="space-y-4"> 
     {logs.map(log => (
       <div key={log.id} className="bg-white p-4 rounded-lg shadow border">
         <div className="flex justify-between items-center mb-2">
@@ -53,5 +54,6 @@ export const LogList: React.FC<LogListProps> = ({logs, loading, error}) => {
       </div>
     ))}
   </div>
+  // spacing auto, flex layout, cards avec ombre
 );
 }
