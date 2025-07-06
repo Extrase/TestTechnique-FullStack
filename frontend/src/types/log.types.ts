@@ -1,4 +1,4 @@
-import { LogLevel } from "./logLevel";
+import type { LogLevel } from "./logLevel";
 
 export interface Log {
   timestamp: string;

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Log } from '../types/log.types';
+import type { Log } from '../types/log.types';
+import type { LogLevel } from "../types/logLevel";
 
 interface LogFormProps {
   onLogCreated: (log: Omit<Log, 'id'>) => void;
@@ -31,12 +32,12 @@ export const LogForm: React.FC<LogFormProps> = ({ onLogCreated, loading }) => {
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const resetForm = () => {
-    setTimestamp('');
-    setLevel('');
-    setMessage('');
-    setService('');
-};
+//   const resetForm = () => {
+//     setTimestamp('');
+//     setLevel('');
+//     setMessage('');
+//     setService('');
+// };
 
   // déclencher la recherche
   const handleSubmit = (e: React.FormEvent) => {
@@ -49,7 +50,7 @@ export const LogForm: React.FC<LogFormProps> = ({ onLogCreated, loading }) => {
     }
     onLogCreated({ // appelle une fonction lors de la soumission d'une recherche
       timestamp: timestamp,
-      level: level,
+      level: level as LogLevel,
       message: message,
       service: service
     });
@@ -70,7 +71,7 @@ export const LogForm: React.FC<LogFormProps> = ({ onLogCreated, loading }) => {
                     id="Timestamp" 
                     placeholder="2025-07-06T14:30:00"
                     value={timestamp}
-                    onChange={(e) => setTimestamp(validateTimestamp(e.target.value))}
+                    onChange={(e) => setTimestamp(e.target.value)}
                     className="flex-1 border border-gray-400 p-2 rounded-lg focus:outline-none focus:border-blue-400" 
                     required />
                 <button 
@@ -113,7 +114,7 @@ export const LogForm: React.FC<LogFormProps> = ({ onLogCreated, loading }) => {
             <label htmlFor="message" className="block text-gray-700 font-medium mb-2">Message</label>
             <textarea id="message" name="message" value={message}
             onChange={(e) => setMessage(e.target.value)}
-                className="border border-gray-400 p-2 w-full rounded-lg focus:outline-none focus:border-blue-400" rows="5"></textarea>
+                className="border border-gray-400 p-2 w-full rounded-lg focus:outline-none focus:border-blue-400" rows={5}></textarea>
         </div>
         <div>
             <button type="submit" 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Log } from '../types/log.types';
+import type { Log } from '../types/log.types';
 import { LoadingSpinner } from './LoadingSpinner';
 
 interface LogListProps {

@@ -1,4 +1,4 @@
-import { SearchFilters, Log } from './../types/log.types';
+import type { SearchFilters, Log } from './../types/log.types';
 import axios from 'axios'
 
 const instance = axios.create({

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SearchFilters } from '../types/log.types';
+import type { SearchFilters } from '../types/log.types';
 
 //typage des props
 interface SearchFilterProps {
