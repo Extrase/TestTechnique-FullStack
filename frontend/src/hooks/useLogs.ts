@@ -12,7 +12,7 @@ export const useLogs = () => { // usestate return un tableau avec 2 items, le cu
     try { // try essaye les operations
         setLoading(true); // initialisation du chargement
         setError(null); //error set a null pour etre sur de bien gerer les erreurs ensuite
-        const actualLogs = await apiSearchLogs({ limit: 20 }); // appels API sans les filtres pour tout afficher
+        const actualLogs = await apiSearchLogs({ size: 20 }); // appels API sans les filtres pour tout afficher
         setLogs(actualLogs);
     } catch (error){ // catch une erreur si il y en a
         setError("Erreur lors du chargement des logs");
@@ -33,7 +33,7 @@ export const useLogs = () => { // usestate return un tableau avec 2 items, le cu
             level: filters.level,
             q: filters.q,
             service: filters.service,
-            limit: 100
+            size: 100
         });
         setLogs(searchedLogs);
     } catch (error){ // catch une erreur si il y en a
@@ -54,8 +54,11 @@ export const useLogs = () => { // usestate return un tableau avec 2 items, le cu
             service: log.service
         });
         setLogs([addedLog, ...logs]);
-    } catch (error){ // catch une erreur si il y en a
-        setError("Erreur lors du l'ajout du log");
+    } catch (error: any) { // catch une erreur si il y en a
+        console.error('Error adding log:', error);
+        const errorMessage = error.response?.data?.detail || error.message || "Erreur lors de l'ajout du log";
+        setError(errorMessage);
+        throw error; // Re-throw pour permettre à la page de gérer l'erreur aussi
     }
     finally { // se produit dans tout les cas
         setLoading(false); // chargement termine

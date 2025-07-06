@@ -12,7 +12,7 @@ export interface SearchFilters {
   q?: string;   // "?" rends le type optionnel
   level?: string;
   service?: string;
-  limit?: number;
+  size?: number;
 }
 
 export interface ApiResponse<T> {

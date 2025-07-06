@@ -15,7 +15,7 @@ export const searchLogs = async (filters: SearchFilters): Promise<Log[]> => {
         q: filters.q,
         level: filters.level,
         service: filters.service,
-        limit: filters.limit
+        size: filters.size
         }
     })
   return response.data

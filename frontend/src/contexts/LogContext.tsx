@@ -1,4 +1,5 @@
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext } from 'react';
+import type { ReactNode } from 'react';
 import { useLogs } from '../hooks/useLogs';
 import type { Log, SearchFilters } from '../types/log.types';
 

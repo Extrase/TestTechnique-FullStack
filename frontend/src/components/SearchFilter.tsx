@@ -7,7 +7,7 @@ interface SearchFilterProps {
   loading: boolean;
 }
 
-export const SearchFilter: React.FC<SearchFilterProps> = ({ onSearch, loading }) => {
+export const SearchFilter: React.FC<SearchFilterProps> = ({ onSearch, loading: _ }) => {
   // etats pour chaque filtre
   const [query, setQuery] = useState<string>(''); // <string> precise que cet etat contiendra une string
   const [level, setLevel] = useState<string>('');

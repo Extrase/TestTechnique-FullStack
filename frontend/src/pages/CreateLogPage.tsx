@@ -24,8 +24,9 @@ export const CreateLogPage: React.FC = () => {
         navigate('/'); // redirection vers la page d'accueil
       }, 2000);
       
-    } catch (error) {
-      setErrorMessage('Erreur lors de la création du log');
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.detail || error.message || 'Erreur lors de la création du log';
+      setErrorMessage(errorMessage);
       console.error('Error creating log:', error);
     }
   };
