@@ -1,5 +1,6 @@
 import React from 'react';
-import { Log } from '../types/log.types';
+import type { Log } from '../types/log.types';
+import { LoadingSpinner } from './LoadingSpinner';
 
 interface LogListProps {
   logs: Log[]; // liste des logs
@@ -31,13 +32,24 @@ const changeLevelColor = (level: string) => { // selon le niveau je change la co
 };
 
 export const LogList: React.FC<LogListProps> = ({logs, loading, error}) => {
-  // TODO: Gestion des cas d'affichage
-  if (loading) return <div>Chargement...</div>; // si loading = true
+  if (loading) return <LoadingSpinner />; // si loading = true on appelle la "fonction" LoadingSpinner
   if (error) return <div>Erreur : {error}</div>; // si error n'est pas null
-  if (logs.length === 0) return <div>Aucun log</div>; // si il n'y a aucun log
+  if (logs.length === 0) return (
+  <div className="bg-white p-8 rounded-lg shadow border text-center">
+    <div className="text-gray-400 mb-4">
+      <span className="text-4xl">📝</span>
+    </div>
+    <h3 className="text-lg font-medium text-gray-700 mb-2">
+      Aucun log trouvé
+    </h3>
+    <p className="text-gray-500">
+      Modifiez vos critères de recherche ou ajoutez votre premier log
+    </p>
+  </div>
+); // si il n'y a aucun log
   
   return (
-  <div className="space-y-4">
+  <div className="space-y-4"> 
     {logs.map(log => (
       <div key={log.id} className="bg-white p-4 rounded-lg shadow border">
         <div className="flex justify-between items-center mb-2">
@@ -48,10 +60,11 @@ export const LogList: React.FC<LogListProps> = ({logs, loading, error}) => {
             {log.level}
           </span>
         </div>
-        <p className="text-gray-900 mb-2">{log.message}</p>
         <p className="text-sm text-gray-600">Service: {log.service}</p>
+        <p className="text-gray-900 mb-2">{log.message}</p>
       </div>
     ))}
   </div>
+  // spacing auto, flex layout, cards avec ombre
 );
 }

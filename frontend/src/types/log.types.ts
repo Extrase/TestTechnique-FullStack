@@ -1,4 +1,4 @@
-import { LogLevel } from "./logLevel";
+import type { LogLevel } from "./logLevel";
 
 export interface Log {
   timestamp: string;
@@ -12,6 +12,7 @@ export interface SearchFilters {
   q?: string;   // "?" rends le type optionnel
   level?: string;
   service?: string;
+  size?: number;
 }
 
 export interface ApiResponse<T> {

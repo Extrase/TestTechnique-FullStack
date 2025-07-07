@@ -1,6 +1,9 @@
 from opensearchpy import OpenSearch
 from datetime import datetime
 from ..config import Settings
+import logging
+
+logger = logging.getLogger(__name__)
 
 class OpenSearchService:
     def __init__(self):
@@ -27,23 +30,35 @@ class OpenSearchService:
         
     def index_log(self, log_data: dict) -> dict:
         """Indexe un log dans OpenSearch et retourne l'ID généré"""
-        timestamp = log_data["timestamp"] # a ce stade timestamp = "2025-07-01T14:30:00"
-        index_name = self._get_index_name(timestamp) # index_name = "logs-2025.07.01"
-        self._index_mapping(index_name)
-        response = self.client.index(
-            index=index_name, # "logs-2025.07.01"
-            body=log_data, # les données de log
-            refresh = True # ]our voir le résultat immédiatement
-        )
-        generated_id = response["_id"] # OpenSearch donne un ID dans la réponse
-        final_log = log_data.copy() # pour ne opas modifier l'original
-        final_log["id"] = generated_id
-        return final_log
+        try:
+            logger.info(f"Indexing log data: {log_data}")
+            timestamp = log_data["timestamp"] # a ce stade timestamp = "2025-07-01T14:30:00"
+            index_name = self._get_index_name(timestamp) # index_name = "logs-2025.07.01"
+            logger.info(f"Using index: {index_name}")
+            
+            self._index_mapping(index_name)
+            logger.info(f"Index mapping created/verified for: {index_name}")
+            
+            response = self.client.index(
+                index=index_name, # "logs-2025.07.01"
+                body=log_data, # les données de log
+                refresh = True # ]our voir le résultat immédiatement
+            )
+            logger.info(f"OpenSearch response: {response}")
+            
+            generated_id = response["_id"] # OpenSearch donne un ID dans la réponse
+            final_log = log_data.copy() # pour ne opas modifier l'original
+            final_log["id"] = generated_id
+            logger.info(f"Successfully indexed log with ID: {generated_id}")
+            return final_log
+        except Exception as e:
+            logger.error(f"Error indexing log: {str(e)}", exc_info=True)
+            raise
         
-    def search_logs(self, q: str = None, level: str = None, service: str = None) -> list:
+    def search_logs(self, q: str = None, level: str = None, service: str = None, size: int = 100) -> list:
         """Recherche les logs avec filtres optionnels"""
         query = {
-        "size": 100,
+        "size": size,
         "sort": [{"timestamp": {"order": "desc"}}],
         "query": {
             "bool": {
@@ -69,15 +84,23 @@ class OpenSearchService:
     
     def _index_mapping(self, index_name: str): # obligatoire pour que OpenSearch interprete comme il faut les valeurs
         """Crée l'index avec le bon mapping s'il n'existe pas"""
-        if not self.client.indices.exists(index=index_name):
-            mapping = {
-                "mappings": {
-                    "properties": {
-                        "timestamp": {"type": "date", "format": "strict_date_optional_time||epoch_millis"}, # epoch_millis lrs timestamps en millisecondes pour le format iso8601
-                        "level": {"type": "keyword"},
-                        "message": {"type": "text"},
-                        "service": {"type": "keyword"}
+        try:
+            if not self.client.indices.exists(index=index_name):
+                logger.info(f"Creating index {index_name} with mapping")
+                mapping = {
+                    "mappings": {
+                        "properties": {
+                            "timestamp": {"type": "date", "format": "strict_date_optional_time||epoch_millis"}, # epoch_millis lrs timestamps en millisecondes pour le format iso8601
+                            "level": {"type": "keyword"},
+                            "message": {"type": "text"},
+                            "service": {"type": "keyword"}
+                        }
                     }
-                }
-            } # primordial car sinon, ex: le level est considere comme un text et non un keyword !
-            self.client.indices.create(index=index_name, body=mapping)
+                } # primordial car sinon, ex: le level est considere comme un text et non un keyword !
+                self.client.indices.create(index=index_name, body=mapping)
+                logger.info(f"Index {index_name} created successfully")
+            else:
+                logger.info(f"Index {index_name} already exists")
+        except Exception as e:
+            logger.error(f"Error creating index mapping for {index_name}: {str(e)}", exc_info=True)
+            raise
