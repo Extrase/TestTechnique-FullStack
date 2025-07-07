@@ -19,7 +19,18 @@ const validateTimestamp = (timestamp: string) => {
 };
 
 const generateCurrentTimestamp = () => {
-  return new Date().toISOString().slice(0, 19); // "2025-07-06T14:30:00"
+  const now = new Date();
+  const frenchTime = new Date(now.toLocaleString("en-US", { timeZone: "Europe/Paris" })); // fuseau horaire francais :)
+  
+  //mettreformat ISO 8601 sans les millisecondes
+  const year = frenchTime.getFullYear();
+  const month = String(frenchTime.getMonth() + 1).padStart(2, '0');
+  const day = String(frenchTime.getDate()).padStart(2, '0');
+  const hours = String(frenchTime.getHours()).padStart(2, '0');
+  const minutes = String(frenchTime.getMinutes()).padStart(2, '0');
+  const seconds = String(frenchTime.getSeconds()).padStart(2, '0');
+  
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
 };
 
 

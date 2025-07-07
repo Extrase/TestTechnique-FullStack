@@ -14,7 +14,7 @@ export const HomePage: React.FC = () => {
           Consultation des Logs
         </h2>
         <p className="text-gray-600">
-          Recherchez et filtrez vos logs pour analyser les événements de votre système.
+          Recherchez et filtrez vos logs.
         </p>
       </div>
 

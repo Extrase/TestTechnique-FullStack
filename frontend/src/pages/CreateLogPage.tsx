@@ -39,7 +39,7 @@ export const CreateLogPage: React.FC = () => {
           Créer un Nouveau Log
         </h2>
         <p className="text-gray-600">
-          Ajoutez manuellement un nouveau log à votre système de surveillance.
+          Ajoutez manuellement un nouveau log.
         </p>
       </div>
 

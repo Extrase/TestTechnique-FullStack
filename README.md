@@ -42,10 +42,10 @@ git clone <repository-url>
 cd TestTechnique-FullStack
 
 # Construire et lancer tous les services
-docker-compose up --build
+docker compose up --build
 
 # Ou en arrière-plan
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
 ### Accès aux services
